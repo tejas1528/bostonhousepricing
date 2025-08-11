@@ -528,21 +528,21 @@
               <label class="form-label" for="CRIM">
                 Crime Rate <span class="field-hint">per capita by town</span>
               </label>
-              <input class="form-input" id="CRIM" name="CRIM" type="number" step="0.001" placeholder="0.100" required>
+              <input class="form-input" id="CRIM" name="CRIM" type="number" step="any" placeholder="0.00632" required>
             </div>
             
             <div class="form-field">
               <label class="form-label" for="ZN">
                 Zoning <span class="field-hint">% residential land over 25k sq ft</span>
               </label>
-              <input class="form-input" id="ZN" name="ZN" type="number" step="0.1" placeholder="12.5" required>
+              <input class="form-input" id="ZN" name="ZN" type="number" step="any" placeholder="18.0" required>
             </div>
 
             <div class="form-field">
               <label class="form-label" for="INDUS">
                 Industry <span class="field-hint">% non-retail business acres</span>
               </label>
-              <input class="form-input" id="INDUS" name="INDUS" type="number" step="0.1" placeholder="7.50" required>
+              <input class="form-input" id="INDUS" name="INDUS" type="number" step="any" placeholder="2.31" required>
             </div>
 
             <div class="form-field">
@@ -560,63 +560,63 @@
               <label class="form-label" for="NOX">
                 Pollution <span class="field-hint">nitric oxides concentration</span>
               </label>
-              <input class="form-input" id="NOX" name="NOX" type="number" step="0.001" placeholder="0.500" required>
+              <input class="form-input" id="NOX" name="NOX" type="number" step="any" placeholder="0.538" required>
             </div>
 
             <div class="form-field">
               <label class="form-label" for="RM">
                 Rooms <span class="field-hint">average rooms per dwelling</span>
               </label>
-              <input class="form-input" id="RM" name="RM" type="number" step="0.1" placeholder="6.20" required>
+              <input class="form-input" id="RM" name="RM" type="number" step="any" placeholder="6.575" required>
             </div>
 
             <div class="form-field">
               <label class="form-label" for="AGE">
                 Building Age <span class="field-hint">% units built before 1940</span>
               </label>
-              <input class="form-input" id="AGE" name="AGE" type="number" step="0.1" placeholder="78.9" required>
+              <input class="form-input" id="AGE" name="AGE" type="number" step="any" placeholder="65.2" required>
             </div>
 
             <div class="form-field">
               <label class="form-label" for="DIS">
                 Distance <span class="field-hint">weighted distances to employment</span>
               </label>
-              <input class="form-input" id="DIS" name="DIS" type="number" step="0.1" placeholder="4.10" required>
+              <input class="form-input" id="DIS" name="DIS" type="number" step="any" placeholder="4.0900" required>
             </div>
 
             <div class="form-field">
               <label class="form-label" for="RAD">
                 Highway Access <span class="field-hint">accessibility index</span>
               </label>
-              <input class="form-input" id="RAD" name="RAD" type="number" step="1" placeholder="4" required>
+              <input class="form-input" id="RAD" name="RAD" type="number" step="any" placeholder="1" required>
             </div>
 
             <div class="form-field">
               <label class="form-label" for="TAX">
                 Property Tax <span class="field-hint">full-value rate per $10k</span>
               </label>
-              <input class="form-input" id="TAX" name="TAX" type="number" step="1" placeholder="330" required>
+              <input class="form-input" id="TAX" name="TAX" type="number" step="any" placeholder="296" required>
             </div>
 
             <div class="form-field">
               <label class="form-label" for="PTRATIO">
                 School Ratio <span class="field-hint">pupil-teacher ratio</span>
               </label>
-              <input class="form-input" id="PTRATIO" name="PTRATIO" type="number" step="0.1" placeholder="18.5" required>
+              <input class="form-input" id="PTRATIO" name="PTRATIO" type="number" step="any" placeholder="15.3" required>
             </div>
 
             <div class="form-field">
               <label class="form-label" for="B">
                 Demographics <span class="field-hint">1000(Bk - 0.63)²</span>
               </label>
-              <input class="form-input" id="B" name="B" type="number" step="0.1" placeholder="396.9" required>
+              <input class="form-input" id="B" name="B" type="number" step="any" placeholder="396.90" required>
             </div>
 
             <div class="form-field full-width">
               <label class="form-label" for="LSTAT">
                 Socioeconomic Status <span class="field-hint">% lower status population</span>
               </label>
-              <input class="form-input" id="LSTAT" name="LSTAT" type="number" step="0.1" placeholder="12.3" required>
+              <input class="form-input" id="LSTAT" name="LSTAT" type="number" step="any" placeholder="4.98" required>
             </div>
           </div>
 
@@ -981,7 +981,7 @@ Generated by Boston House Price AI Predictor`;
       }, 2000);
     });
 
-    // Input validation and real-time feedback
+    // Input validation and real-time feedback (simplified - no range restrictions)
     const inputs = form.querySelectorAll('input[type="number"], select');
     inputs.forEach(input => {
       input.addEventListener('input', (e) => {
@@ -991,11 +991,30 @@ Generated by Boston House Price AI Predictor`;
         // Remove previous validation classes
         field.classList.remove('valid', 'invalid');
         
-        if (value && e.target.checkValidity()) {
-          field.classList.add('valid');
-        } else if (value) {
-          field.classList.add('invalid');
+        // Only check if field has a value and is a valid number (no range restrictions)
+        if (value) {
+          if (e.target.type === 'number') {
+            // For number inputs, just check if it's a valid number
+            const numValue = parseFloat(value);
+            if (!isNaN(numValue) && isFinite(numValue)) {
+              field.classList.add('valid');
+            } else {
+              field.classList.add('invalid');
+            }
+          } else {
+            // For select inputs, check if valid option is selected
+            if (e.target.checkValidity()) {
+              field.classList.add('valid');
+            } else {
+              field.classList.add('invalid');
+            }
+          }
         }
+      });
+      
+      // Remove browser's built-in validation messages
+      input.addEventListener('invalid', (e) => {
+        e.preventDefault();
       });
     });
 
